@@ -17,6 +17,7 @@
 
 #include <Qt>                    // for Qt::CaseInsensitive
 #include <QtDebug>               // for qCritical, qDebug
+#include <QSettings>
 
 using namespace MOBase;
 
@@ -88,12 +89,12 @@ QString SanityCheck::author() const
 
 QString SanityCheck::description() const
 {
-    return tr("Handles common problems");
+    return tr("Handles common problems and quality of life tweaks");
 }
 
 VersionInfo SanityCheck::version() const
 {
-    return VersionInfo(1, 0, 0, VersionInfo::RELEASE_FINAL);
+    return VersionInfo(1, 0, 1, VersionInfo::RELEASE_FINAL);
 }
 
 /* Uncomment if you want this plugin to run on specific game
@@ -121,38 +122,36 @@ QList<PluginSetting> SanityCheck::settings() const
         ;
 }
 
-uint64_t calculateFileHash(const std::string& filePath)
+QString SanityCheck::displayName() const
 {
-    std::ifstream file(filePath, std::ios::binary);
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file: " + filePath);
-    }
-    const size_t bufferSize = static_cast<size_t>(64) * 1024;
-    std::vector<char> buffer(bufferSize);
-    XXH64_state_t* state = XXH64_createState();
-    if (state == nullptr) {
-        throw std::runtime_error("Failed to create xxHash state");
-    }
-    XXH64_reset(state, 0);
-    while (file.good()) {
-        file.read(buffer.data(), bufferSize);
-        size_t bytesRead = file.gcount();
-        if (bytesRead > 0) {
-            XXH64_update(state, buffer.data(), bytesRead);
-        }
-    }
-    uint64_t hash = XXH64_digest(state);
-    XXH64_freeState(state);
-    return hash;
+    // the name of this tool as displayed in the toolbar
+    return tr("Reset SanityCheck dialog choice");
 }
 
-QString getFileNameWithoutExtension(const QString& filePath) {
-    QFileInfo fileInfo(filePath);
-    return fileInfo.completeBaseName();
+QString SanityCheck::tooltip() const
+{
+    // tooltip for the toolbar icon
+    return tr(
+        "This will reset the dialog choice of the SanityCheck "
+        ""
+    );
 }
 
-bool fileExists(const QString& filePath) {
-    return QFile::exists(filePath);
+QIcon SanityCheck::icon() const
+{
+    // icon in the toolbar. You should manage this icon (and all other graphics/assets
+    // you need) in a resource file that gets included in the dll so you don't have to
+    // ship multiple files. Please check the other plugins to see how this works.
+    return QIcon("");
+}
+
+void SanityCheck::display() const
+{
+    // display gets called when the user activates your plugin.
+    // This is basically the main entry point of your tool plugin.
+    // You can always use parentWidget() to refer to the main window.
+    deleteRegistryValue("FirstTimeSetupNoticeNewVegas");
+    qInfo() << "Dialog choices for SanityCheck have been reset.";
 }
 
 void SanityCheck::singleDotOverrideCheck(const MOBase::IModInterface* mod) const
@@ -166,7 +165,7 @@ void SanityCheck::singleDotOverrideCheck(const MOBase::IModInterface* mod) const
         const auto modPath = mod->absolutePath();
         QList<QString> fileNames;
         QDir dir(modPath);
-        QStringList bsaFiles = dir.entryList(QStringList() << "*.bsa", QDir::Files | QDir::NoDotAndDotDot);
+        const QStringList bsaFiles = dir.entryList(QStringList() << "*.bsa", QDir::Files | QDir::NoDotAndDotDot);
 
         for (const QString& file : bsaFiles) {
             QFileInfo fileInfo(file);
@@ -174,8 +173,8 @@ void SanityCheck::singleDotOverrideCheck(const MOBase::IModInterface* mod) const
         }
 
         for (const QString& fileName : fileNames) {
-            QString overrideFileName = fileName + ".override";
-            QString overrideFilePath = dir.filePath(overrideFileName);
+            const QString overrideFileName = fileName + ".override";
+            const QString overrideFilePath = dir.filePath(overrideFileName);
 
             if (!QFile::exists(overrideFilePath)) {
                 // Create a dummy .override file
@@ -196,6 +195,7 @@ void SanityCheck::dotOverrideInitCheck() const
 {
     if (!m_MOInfo->pluginSetting(name(), "dotoverrideinit_check").toBool())
         return;
+
     TimeThis tt("SanityCheck::dotOverrideInitCheck()");
 
     const auto& managedGame = m_MOInfo->managedGame()->gameName();
@@ -204,7 +204,7 @@ void SanityCheck::dotOverrideInitCheck() const
     {
         const auto modPath = m_MOInfo->modsPath();
         QDir modDirs(modPath);
-        QStringList modDirectories =
+        const QStringList modDirectories =
             modDirs.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
         for (const QString& modDir : modDirectories) {
@@ -212,13 +212,13 @@ void SanityCheck::dotOverrideInitCheck() const
                 continue;  // Ignore .git directory
             }
 
-            QDir modDirPath = modDirs.absoluteFilePath(modDir);
-            QStringList bsaFiles =
+            const QDir modDirPath = modDirs.absoluteFilePath(modDir);
+            const QStringList bsaFiles =
                 modDirPath.entryList(QStringList() << "*.bsa", QDir::Files);
             if (!bsaFiles.isEmpty()) {
-                QString filename = bsaFiles.first();
+                const QString filename = bsaFiles.first();
 
-                QString bsaNameWithOverride =
+                const QString bsaNameWithOverride =
                     modPath + "\\" + modDir + "\\" +
                     getFileNameWithoutExtension(filename) + ".override";
 
@@ -292,7 +292,7 @@ void SanityCheck::executableHashCheck() const
     const auto& managedGame = m_MOInfo->managedGame()->gameName();
     if (managedGame == "TTW" || managedGame == "New Vegas")
     {
-        uint64_t executableHash =
+        const uint64_t executableHash =
             calculateFileHash(m_MOInfo->managedGame()->gameDirectory().absoluteFilePath(
                 m_MOInfo->managedGame()->binaryName()).toStdString());
 
@@ -332,7 +332,7 @@ bool SanityCheck::executableHashCheckAlt() const
     const auto& managedGame = m_MOInfo->managedGame()->gameName();
     if (managedGame == "TTW" || managedGame == "New Vegas") {
         const auto gameBinary = m_MOInfo->managedGame()->binaryName();
-        uint64_t executableHash = calculateFileHash(
+        const uint64_t executableHash = calculateFileHash(
             m_MOInfo->managedGame()->gameDirectory().absoluteFilePath(gameBinary).toStdString());
 
         const std::unordered_set<uint64_t> patchedExecutableHashes = {
@@ -356,7 +356,7 @@ void SanityCheck::bethsPluginCheck() const
         return;
 
     const auto pluginList = m_MOInfo->pluginList();
-    QStringList names = pluginList->pluginNames();
+    const QStringList names = pluginList->pluginNames();
     QStringList activePlugins;
     for (auto& name : names) {
         if (pluginList->state(name) == IPluginList::STATE_ACTIVE) {
@@ -403,7 +403,7 @@ void SanityCheck::geckIniCheck() const
     const auto managedGame = m_MOInfo->managedGame()->gameName();
     if (managedGame == "TTW" || managedGame == "New Vegas")
     {
-        QString geckIniPath = m_MOInfo->profilePath() + "\\GECKCustom.ini";
+        const QString geckIniPath = m_MOInfo->profilePath() + "\\GECKCustom.ini";
         std::ifstream file(geckIniPath.toStdString());
 
         if (file.peek() == std::ifstream::traits_type::eof()) { //Check if the file is empty
@@ -431,7 +431,11 @@ void SanityCheck::firstTimeSetupNoticeNewVegas() const
 {
     if (!m_MOInfo->pluginSetting(name(), "firsttimesetupnv_check").toBool())
         return;
-    const auto managedGame = m_MOInfo->managedGame()->gameName();
+    const QString registkey = getRegistryValue("FirstTimeSetupNoticeNewVegas");
+    if (registkey != "")
+        return;
+
+    const QString managedGame = m_MOInfo->managedGame()->gameName();
     if (managedGame == "TTW" || managedGame == "New Vegas") {
         qInfo() << "MO2 has detected that this is your first time managing the game, "
             "open the notification for an important notice";
@@ -441,6 +445,9 @@ void SanityCheck::firstTimeSetupNoticeNewVegas() const
 bool SanityCheck::firstTimeSetupNoticeNewVegasAlt() const
 {
     if (!m_MOInfo->pluginSetting(name(), "firsttimesetupnv_check").toBool())
+        return false;
+    const QString registkey = getRegistryValue("FirstTimeSetupNoticeNewVegas");
+    if (registkey != "")
         return false;
     const auto managedGame = m_MOInfo->managedGame()->gameName();
     if (managedGame == "TTW" || managedGame == "New Vegas") {
@@ -460,7 +467,7 @@ void SanityCheck::vortexFilesCheck() const
         "vortex.deployment.json"
     };
 
-    QStringList foundFiles = gameDirectory.entryList(QDir::Files | QDir::Dirs, QDir::Name);
+    const QStringList foundFiles = gameDirectory.entryList(QDir::Files | QDir::Dirs, QDir::Name);
     for (const auto& file : foundFiles) {
         if (vortexFiles.find(file.toStdString()) != vortexFiles.end()) {
             
@@ -482,20 +489,12 @@ bool SanityCheck::vortexFilesCheckAlt() const
         "vortex.deployment.json"
     };
 
-    QStringList foundFiles = gameDirectory.entryList(QDir::Files | QDir::Dirs, QDir::Name);
+    const QStringList foundFiles = gameDirectory.entryList(QDir::Files | QDir::Dirs, QDir::Name);
     for (const auto& file : foundFiles) {
         if (vortexFiles.find(file.toStdString()) != vortexFiles.end()) 
             return true;
     }
     return false;
-}
-
-void SanityCheck::onShowMemoryMessageBox(const QString& memory, const QString& title, const QString& text,
-    const QDialogButtonBox::StandardButtons yesandnobutton,
-    const QDialogButtonBox::StandardButton defaultbutton)
-{
-    const auto& response = QuestionBoxMemory::query(
-        nullptr, memory, title, text, yesandnobutton, defaultbutton);
 }
 
 std::vector<unsigned int> SanityCheck::activeProblems() const
@@ -566,7 +565,7 @@ QString SanityCheck::fullDescription(unsigned int key) const
             "compile the shader and <b>crash the game</b>. The issue is stated "
             "on the official AMD website in this <a href='https://www.amd.com/en/resources/support-articles/release-notes/RN-RAD-WIN-24-4-1.html'>link</a>.<br>"
             "Make sure that your driver version is updated.<br><br>"
-            "<b>If you've acknowledged the notice, press Fix to resolve it</b>."
+            "<b>If you've acknowledged the notice, press Resolve.</b>."
         );
         break;
     case PROBLEM_FNVLANG:
@@ -575,7 +574,7 @@ QString SanityCheck::fullDescription(unsigned int key) const
             "in the game files.<br><br>This translation plugin is bundled with the base game and it "
             "directly edits thousands of records to change the language, which will "
             "cause many incompatibilities with most mods.<br><br>"
-            "Pressing fix will delete the file");
+            "Pressing Resolve will delete the file");
         break;
     case PROBLEM_UNPATCHED_EXE:
         return tr(
@@ -641,6 +640,7 @@ void SanityCheck::startGuidedFix(unsigned int key) const
     switch (key)
     {
     case PROBLEM_FIRSTTIME_SETUPNV:
+        setRegistryValue("FirstTimeSetupNoticeNewVegas", "true");
         m_MOInfo->setPluginSetting(name(), "firsttimesetupnv_check", false);
         break;
     case PROBLEM_FNVLANG:
@@ -651,6 +651,63 @@ void SanityCheck::startGuidedFix(unsigned int key) const
     default:
         throw MyException(tr("invalid problem key %1").arg(key));
     }
+}
+
+void SanityCheck::setRegistryValue(const QString& key, const QString& value) const {
+    QSettings settings("Mod Organizer Senjay Edition", "SanityCheck Plugin");
+    settings.setValue(key, value);
+}
+
+QString SanityCheck::getRegistryValue(const QString& key) const {
+    QSettings settings("Mod Organizer Senjay Edition", "SanityCheck Plugin");
+    return settings.value(key, "").toString(); // Default to empty string if not found
+}
+
+void SanityCheck::deleteRegistryValue(const QString& key) const {
+    QSettings settings("Mod Organizer Senjay Edition", "SanityCheck Plugin");
+    settings.remove(key);
+}
+
+void SanityCheck::onShowMemoryMessageBox(const QString& memory, const QString& title, const QString& text,
+    const QDialogButtonBox::StandardButtons yesandnobutton,
+    const QDialogButtonBox::StandardButton defaultbutton)
+{
+    const auto& response = QuestionBoxMemory::query(
+        nullptr, memory, title, text, yesandnobutton, defaultbutton);
+}
+
+uint64_t SanityCheck::calculateFileHash(const std::string& filePath) const
+{
+    std::ifstream file(filePath, std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filePath);
+}
+    const size_t bufferSize = static_cast<size_t>(64) * 1024;
+    std::vector<char> buffer(bufferSize);
+    XXH64_state_t* state = XXH64_createState();
+    if (state == nullptr) {
+        throw std::runtime_error("Failed to create xxHash state");
+    }
+    XXH64_reset(state, 0);
+    while (file.good()) {
+        file.read(buffer.data(), bufferSize);
+        const size_t bytesRead = file.gcount();
+        if (bytesRead > 0) {
+            XXH64_update(state, buffer.data(), bytesRead);
+        }
+    }
+    const uint64_t hash = XXH64_digest(state);
+    XXH64_freeState(state);
+    return hash;
+}
+
+QString SanityCheck::getFileNameWithoutExtension(const QString& filePath) const {
+    QFileInfo fileInfo(filePath);
+    return fileInfo.completeBaseName();
+}
+
+bool SanityCheck::fileExists(const QString& filePath) const {
+    return QFile::exists(filePath);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6,0,0)

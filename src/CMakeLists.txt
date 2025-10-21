@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.16)
 
-set(srcs main.h main.cpp xxhash.c xxhash.h)
+find_package(mo2-cmake CONFIG REQUIRED)
+find_package(mo2-uibase CONFIG REQUIRED)
 
-file(GLOB_RECURSE ts_srcs "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/ui/*.ui")
-qt6_create_translation(QM_FILES ${ts_srcs} main_en.ts)
-
-add_library(plugin_sanitycheck SHARED ${srcs} ${QM_FILES})
-
-# simply link uibase
-target_link_libraries(plugin_sanitycheck uibase)
+add_library(plugin_sanitycheck SHARED
+	main.h main.cpp xxhash.h xxhash.c
+)
+mo2_configure_plugin(plugin_sanitycheck NO_SOURCES WARNINGS 4)
+target_link_libraries(plugin_sanitycheck PRIVATE mo2::uibase)
+mo2_install_plugin(plugin_sanitycheck)

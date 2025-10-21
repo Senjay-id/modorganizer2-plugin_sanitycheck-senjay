@@ -1,11 +1,11 @@
 #include "main.h"
 #include "xxhash.h"
 
-#include "iplugingame.h"
-#include "ipluginlist.h"
-#include "ifiletree.h"
-#include "pluginsetting.h"
-#include "utility.h"
+#include "uibase/iplugingame.h"
+#include "uibase/ipluginlist.h"
+#include "uibase/ifiletree.h"
+#include "uibase/pluginsetting.h"
+#include "uibase/utility.h"
 
 #include <unordered_set>
 #include <iostream>
@@ -13,7 +13,7 @@
 
 #include <QApplication>
 #include <QMessageBox>
-#include <questionboxmemory.h>
+#include <uibase/questionboxmemory.h>
 
 #include <Qt>                    // for Qt::CaseInsensitive
 #include <QtDebug>               // for qCritical, qDebug

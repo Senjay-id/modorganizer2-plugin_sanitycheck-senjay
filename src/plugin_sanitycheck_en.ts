@@ -2,28 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>Dialog</name>
-    <message>
-        <location filename="ui/dialog.ui" line="20"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui/dialog.ui" line="33"/>
-        <source>MO2 Plugin Demonstration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui/dialog.ui" line="43"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SanityCheck</name>
     <message>
         <location filename="main.cpp" line="82"/>
@@ -38,7 +16,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="main.cpp" line="114"/>
         <source>Automatic .override creation for all mods at initialization in FNV and TTW instances (requires JIP LN to have any effect).</source>
-        <oldsource>Automatic .override creation in FNV and TTW instances (requires JIP LN to have any effect).</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -113,7 +90,6 @@ Light plugins past 4096 will not load</source>
     <message>
         <location filename="main.cpp" line="531"/>
         <source>First time setup important notice</source>
-        <oldsource>First time setup</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -124,7 +100,6 @@ Light plugins past 4096 will not load</source>
     <message>
         <location filename="main.cpp" line="537"/>
         <source>Unpatched game executable</source>
-        <oldsource>The game executable is not patched</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -151,15 +126,13 @@ Light plugins past 4096 will not load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.cpp" line="591"/>
-        <source>MO2 has detected that there are residual vortex files inside the game folder.&lt;br&gt;&lt;br&gt;It&apos;s advised to do a clean deletion of the game files and reinstall before managing mods with MO2.&lt;br&gt;Below are the instruction for doing a clean deletion of the game files according to your platform:&lt;br&gt;&lt;br&gt;&lt;b&gt;Steam&lt;/b&gt;&lt;ol&gt;&lt;li&gt;Open &lt;b&gt;Steam&lt;/b&gt;, go to your &lt;b&gt;Library&lt;/b&gt; and find &lt;b&gt;Fallout: New Vegas&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Right click and choose &lt;b&gt;Properties&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Click the &lt;b&gt;Installed Files&lt;/b&gt; then &lt;b&gt;Browse&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Delete all the game files&lt;/li&gt;&lt;li&gt;Enter this path in your file explorer &lt;b&gt;%USERPROFILE%\Documents\My Games\FalloutNV&lt;/b&gt; then delete all the .ini files&lt;/li&gt;&lt;/ol&gt;&lt;b&gt;GOG&lt;/b&gt;&lt;ol&gt;&lt;li&gt;Navigate to where you&apos;ve installed Fallout: New Vegas&lt;/li&gt;&lt;li&gt;Delete all the game files&lt;/li&gt;&lt;li&gt;Enter this path in your file explorer &lt;b&gt;%USERPROFILE%\Documents\My Games\FalloutNV&lt;/b&gt; then delete all the .ini files&lt;/li&gt;&lt;/ol&gt;</source>
-        <oldsource>MO2 has detected that there are residual vortex files inside the game folder.&lt;br&gt;It&apos;s advised to do a clean deletion of the game files and reinstall before managing mods with MO2.&lt;br&gt;Below are the instruction for doing a clean deletion of the game files according to your platform:&lt;br&gt;&lt;br&gt;&lt;b&gt;Steam&lt;/b&gt;&lt;ol&gt;&lt;li&gt;Open &lt;b&gt;Steam&lt;/b&gt;, go to your &lt;b&gt;Library&lt;/b&gt; and find &lt;b&gt;Fallout: New Vegas&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Right click and choose &lt;b&gt;Properties&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Click the &lt;b&gt;Installed Files&lt;/b&gt; then &lt;b&gt;Browse&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Delete all the game files&lt;/li&gt;&lt;li&gt;Enter this path in your file explorer &lt;b&gt;%USERPROFILE%\Documents\My Games\FalloutNV&lt;/b&gt; then delete all the .ini files&lt;/li&gt;&lt;/ol&gt;&lt;b&gt;GOG&lt;/b&gt;&lt;ol&gt;&lt;li&gt;Navigate to where you&apos;ve installed Fallout: New Vegas&lt;/li&gt;&lt;li&gt;Delete all the game files&lt;/li&gt;&lt;li&gt;Enter this path in your file explorer &lt;b&gt;%USERPROFILE%\Documents\My Games\FalloutNV&lt;/b&gt; then delete all the .ini files&lt;/li&gt;&lt;/ol&gt;</oldsource>
+        <location filename="main.cpp" line="580"/>
+        <source>MO2 has detected that the game executable hasn&apos;t been patched with the 4GB Patcher.&lt;br&gt;It won&apos;t load xNVSE and will be limited to 2GB of RAM&lt;br&gt;&lt;br&gt;You can download and install the patch from the link below:&lt;br&gt;&lt;a href=&quot;https://www.nexusmods.com/newvegas/mods/62552&quot;&gt;https://www.nexusmods.com/newvegas/mods/62552&lt;/a&gt;&lt;br&gt;&lt;br&gt;Epic version below:&lt;br&gt;&lt;a href=&quot;https://www.nexusmods.com/newvegas/mods/81281&quot;&gt;https://www.nexusmods.com/newvegas/mods/81281&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.cpp" line="580"/>
-        <source>MO2 has detected that the game executable hasn&apos;t been patched with the 4GB Patcher.&lt;br&gt;It won&apos;t load xNVSE and will be limited to 2GB of RAM&lt;br&gt;&lt;br&gt;You can download and install the patch from the link below:&lt;br&gt;&lt;a href=&quot;https://www.nexusmods.com/newvegas/mods/62552&quot;&gt;https://www.nexusmods.com/newvegas/mods/62552&lt;/a&gt;&lt;br&gt;&lt;br&gt;Epic version below:&lt;br&gt;&lt;a href=&quot;https://www.nexusmods.com/newvegas/mods/81281&quot;&gt;https://www.nexusmods.com/newvegas/mods/81281&lt;/a&gt;</source>
-        <oldsource>MO2 has detected that the game executable hasn&apos;t been patched with the 4GB Patcher. It won&apos;t load xNVSE and will be limited to 2GB of RAM&lt;br&gt;&lt;br&gt;You can download and install the patch from the link below:&lt;br&gt;&lt;a href=&quot;https://www.nexusmods.com/newvegas/mods/62552&quot;&gt;https://www.nexusmods.com/newvegas/mods/62552&lt;/a&gt;&lt;br&gt;&lt;br&gt;Epic version below:&lt;br&gt;&lt;a href=&quot;https://www.nexusmods.com/newvegas/mods/81281&quot;&gt;https://www.nexusmods.com/newvegas/mods/81281&lt;/a&gt;</oldsource>
+        <location filename="main.cpp" line="591"/>
+        <source>MO2 has detected that there are residual vortex files inside the game folder.&lt;br&gt;&lt;br&gt;It&apos;s advised to do a clean deletion of the game files and reinstall before managing mods with MO2.&lt;br&gt;Below are the instruction for doing a clean deletion of the game files according to your platform:&lt;br&gt;&lt;br&gt;&lt;b&gt;Steam&lt;/b&gt;&lt;ol&gt;&lt;li&gt;Open &lt;b&gt;Steam&lt;/b&gt;, go to your &lt;b&gt;Library&lt;/b&gt; and find &lt;b&gt;Fallout: New Vegas&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Right click and choose &lt;b&gt;Properties&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Click the &lt;b&gt;Installed Files&lt;/b&gt; then &lt;b&gt;Browse&lt;/b&gt;&lt;/li&gt;&lt;li&gt;Delete all the game files&lt;/li&gt;&lt;li&gt;Enter this path in your file explorer &lt;b&gt;%USERPROFILE%\Documents\My Games\FalloutNV&lt;/b&gt; then delete all the .ini files&lt;/li&gt;&lt;/ol&gt;&lt;b&gt;GOG&lt;/b&gt;&lt;ol&gt;&lt;li&gt;Navigate to where you&apos;ve installed Fallout: New Vegas&lt;/li&gt;&lt;li&gt;Delete all the game files&lt;/li&gt;&lt;li&gt;Enter this path in your file explorer &lt;b&gt;%USERPROFILE%\Documents\My Games\FalloutNV&lt;/b&gt; then delete all the .ini files&lt;/li&gt;&lt;/ol&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

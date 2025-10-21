@@ -1,9 +1,9 @@
 #pragma once
 
-#include "iplugin.h"
-#include "iplugintool.h"
-#include "imodinterface.h"
-#include "iplugindiagnose.h"
+#include "uibase/iplugin.h"
+#include "uibase/iplugintool.h"
+#include "uibase/imodinterface.h"
+#include "uibase/iplugindiagnose.h"
 #include <QObject>
 #include <QDialogButtonBox>
 
